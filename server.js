@@ -1,12 +1,12 @@
 const express = require("express");
 const path = require("path");
+const notes = require("./db/db.json");
+const fs = require("fs");
 
 const app = express();
 
-// Sets an initial port. We"ll use this later in our listener
 var PORT = process.env.PORT || 8080;
 
-// Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
@@ -16,29 +16,26 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
-app.get("/note", function(req, res) {
+app.get("/notes", function(req, res) {
   res.sendFile(path.join(__dirname, "./public/notes.html"));
+
 });
 
 // API routes
-// app.get("/api/notes", function(req, res) {
-//     res.json("../db/bd.json");
-//   });
+app.get("/api/notes", function(req, res) {
+  res.sendFile(path.join(__dirname, "./db/db.json"));
 
+});
 
-// this will add a note to the json file
-// app.post("/api/tables", function(req, res) {
-//     if (tableData.length < 5) {
-//       tableData.push(req.body);
-//       res.json(true);
-//     }
-//     else {
-//       waitListData.push(req.body);
-//       res.json(false);
-//     }
-//   });
-
-
+// POST Requests
+// this adds a note to the db.json file
+app.post("/api/notes", function(req, res) {
+  let newNote = req.body;
+  notes.push(newNote);
+  fs.writeFile("./db/db.json", JSON.stringify(notes),function(err, data){
+  if(err) console.log(err);});
+  res.send(newNote);
+});
 
 
 app.listen(PORT, function() {
