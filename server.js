@@ -28,11 +28,10 @@ app.get("/api/notes", function(req, res) {
 });
 
 // POST Requests
-// this adds a note to the db.json file
+// this assignd an Id to the note sent from the client and adds it to the db.json file
 app.post("/api/notes", function(req, res) {
   let noteInfo = req.body;
   let newId = 0;
-// console.log(!notes);
   if (!notes) {
     newId = 1;
   } else {
@@ -49,12 +48,24 @@ app.post("/api/notes", function(req, res) {
       title: noteInfo.title,
       text: noteInfo.text
     };
-  
+  notes.sort(function(a, b) {return (a['id']) - (b['id'])});
   notes.push(newNote);
   fs.writeFile("./db/db.json", JSON.stringify(notes),function(err, data){
   if(err) console.log(err);});
    res.send(newNote);
 });
+
+// this deletes a note from the db.json file based on the Id passed over from the client
+app.delete("/api/notes/:id", function(req, res) {
+  let idToDelete = req.params.id;
+  let noteToDelete = notes.find(element => element.id == idToDelete); 
+  let indexToDelete = notes.indexOf(noteToDelete); 
+  notes.splice(indexToDelete,1);
+  fs.writeFile("./db/db.json", JSON.stringify(notes),function(err, data){
+    if(err) console.log(err);});
+  res.send(notes);
+});
+
 
 
 app.listen(PORT, function() {
