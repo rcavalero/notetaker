@@ -30,11 +30,30 @@ app.get("/api/notes", function(req, res) {
 // POST Requests
 // this adds a note to the db.json file
 app.post("/api/notes", function(req, res) {
-  let newNote = req.body;
+  let noteInfo = req.body;
+  let newId = 0;
+// console.log(!notes);
+  if (!notes) {
+    newId = 1;
+  } else {
+    newId = notes.sort( 
+      function(a, b) {
+         return (b['id']) - (a['id']);
+      }
+      )[0]['id'] +1
+    ;
+  };
+
+  let newNote = {
+      id: newId,
+      title: noteInfo.title,
+      text: noteInfo.text
+    };
+  
   notes.push(newNote);
   fs.writeFile("./db/db.json", JSON.stringify(notes),function(err, data){
   if(err) console.log(err);});
-  res.send(newNote);
+   res.send(newNote);
 });
 
 

@@ -84,12 +84,16 @@ var handleNoteDelete = function(event) {
 // Sets the activeNote and displays it
 var handleNoteView = function() {
   activeNote = $(this).data();
+  // console.log(activeNote);
+  
   renderActiveNote();
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
 var handleNewNoteView = function() {
   activeNote = {};
+
+
   renderActiveNote();
 };
 
@@ -106,7 +110,7 @@ var handleRenderSaveBtn = function() {
 // Render's the list of note titles
 var renderNoteList = function(notes) {
   $noteList.empty();
-
+  
   var noteListItems = [];
 
   for (var i = 0; i < notes.length; i++) {
@@ -128,6 +132,8 @@ var renderNoteList = function(notes) {
 // Gets notes from the db and renders them to the sidebar
 var getAndRenderNotes = function() {
   return getNotes().then(function(data) {
+    // console.log(data);
+    
     renderNoteList(data);
   });
 };
