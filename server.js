@@ -32,7 +32,7 @@ app.get("/api/notes", function(req, res) {
 app.post("/api/notes", function(req, res) {
   let noteInfo = req.body;
   let newId = 0;
-  if (!notes) {
+  if (notes.length<1) {
     newId = 1;
   } else {
     newId = notes.sort( 
@@ -58,7 +58,7 @@ app.post("/api/notes", function(req, res) {
 // this deletes a note from the db.json file based on the Id passed over from the client
 app.delete("/api/notes/:id", function(req, res) {
   let idToDelete = req.params.id;
-  let noteToDelete = notes.find(element => element.id == idToDelete); 
+  let noteToDelete = notes.find(note => note.id == idToDelete); 
   let indexToDelete = notes.indexOf(noteToDelete); 
   notes.splice(indexToDelete,1);
   fs.writeFile("./db/db.json", JSON.stringify(notes),function(err, data){
